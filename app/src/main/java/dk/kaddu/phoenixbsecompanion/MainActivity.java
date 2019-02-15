@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 public class MainActivity extends AppCompatActivity {
@@ -22,18 +23,46 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        updateGameStatus(this.findViewById(R.id.button_updateStatus));
+    }
+
+    /** Called when the user taps the Update Game Status button */
+    public void updateGameStatus(View view) {
         SharedPreferences prefs =
                 PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
-        String xmlQueryUri = uriBuilder(
+        String xmlQueryUriString = uriBuilder(
                 prefs.getString("nexus_uri", "www.phoenixbse.co.uk"),
                 prefs.getString("nexus_uid", "1"),
                 prefs.getString("nexus_code", "22d9b2c0316adab0f9104571c7ed8eb0"));
-        Log.d(LOG_TAG,"xmlQueryUri = " + xmlQueryUri);
+        Log.d(LOG_TAG,"xmlQueryUriString = " + xmlQueryUriString);
+
+        Uri xmlQueryUri = Uri.parse(xmlQueryUriString);
+
+        InputStream gameStatusInputStream = null;
+        try {
+            gameStatusInputStream = getContentResolver().openInputStream(xmlQueryUri);
+            // TODO add XML parser code for updateGameStatus()
+        } catch (Exception e) {
+            // TODO Handle that the XML file is not available to updateGameStatus()
+
+        } finally {
+            if (gameStatusInputStream != null) {
+                try {
+                    gameStatusInputStream.close();
+                }
+                catch(IOException ioex) {
+                    //Very bad things just happened... handle it
+                }
+
+            }
+        }
+
+
     }
 
 
-    /** Called when the user taps the Send button */
+    /** Called when the user taps the Preferences button */
     public void viewPreferences(View view) {
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
