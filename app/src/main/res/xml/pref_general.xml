@@ -1,7 +1,8 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <EditTextPreference
-        android:defaultValue="@string/pref_default_nexus_uid"
+        android:defaultValue="@string/pref_default_nexus_uri"
+        android:inputType="number"
         android:key="nexus_uid"
         android:maxLines="1"
         android:selectAllOnFocus="true"
@@ -15,6 +16,15 @@
         android:selectAllOnFocus="true"
         android:singleLine="true"
         android:title="@string/pref_title_nexus_code" />
+
+    <EditTextPreference
+        android:defaultValue="@string/pref_default_nexus_uri"
+        android:key="nexus_uri"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/pref_title_nexus_uri"
+        android:inputType="textUri" />
 
 
     <!-- Saved for reference

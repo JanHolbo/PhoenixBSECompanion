@@ -78,4 +78,8 @@
     <string name="pref_default_nexus_uid">1</string>
     <string name="pref_title_nexus_code">Nexus XML access code</string>
     <string name="pref_default_nexus_code">22d9b2c0316adab0f9104571c7ed8eb0</string>
+    <string name="pref_title_nexus_uri">Nexus XML access URI</string>
+    <string name="pref_default_nexus_uri">www.phoenixbse.co.uk</string>
+    <string name="main_title_starDate">Star Date</string>
+    <string name="main_title_gameStatus">Game Status</string>
 </resources>
