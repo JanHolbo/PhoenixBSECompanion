@@ -10,6 +10,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,7 +46,21 @@ public class MainActivity extends AppCompatActivity {
         InputStream gameStatusInputStream = null;
         try {
             gameStatusInputStream = getContentResolver().openInputStream(xmlQueryUri);
-            // TODO add XML parser code for updateGameStatus()
+            XmlPullParser parserFactory;
+            try {
+                parserFactory = XmlPullParserFactory.newInstance();
+                XmlPullParser parser = ((XmlPullParserFactory) parserFactory).newPullParser();
+                parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+                parser.setInput(gameStatusInputStream, null);
+
+                processParsing(parser);
+
+            } catch (XmlPullParserException e) {
+
+            } catch (Exception e) {
+
+            }
+
         } catch (Exception e) {
             // TODO Handle that the XML file is not available to updateGameStatus()
 
@@ -58,6 +76,11 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+
+    }
+
+    private void processParsing (XmlPullParser parser) throws IOException, XmlPullParserException {
+        // TODO add XML parsing code for the Game Status XML response
 
     }
 
