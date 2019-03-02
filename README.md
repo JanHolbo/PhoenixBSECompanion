@@ -8,3 +8,7 @@ This is meant to be an Android companion App for Phoenix BSE Players
 
 Stable Branch:      None yet
 Development Branch: Alpha 0.1
+
+Milestones:
+Beta 0.2
+First release. Will read and display game status via the PhoenixBSE Nexus XML interface
