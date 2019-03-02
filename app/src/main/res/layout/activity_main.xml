@@ -37,30 +37,30 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
         android:text="TextView"
-        app:layout_constraintStart_toEndOf="@+id/textView_stardate"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_stardate" />
 
     <TextView
         android:id="@+id/textView_gameStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
+        android:layout_marginStart="88dp"
+        android:layout_marginLeft="88dp"
         android:layout_marginTop="16dp"
         android:text="@string/main_title_gameStatus"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView_stardate" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView_current_gameStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
+        android:layout_marginStart="88dp"
+        android:layout_marginLeft="88dp"
         android:layout_marginTop="16dp"
         android:text="TextView"
-        app:layout_constraintStart_toEndOf="@+id/textView_gameStatus"
-        app:layout_constraintTop_toBottomOf="@+id/textView_current_stardate" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_gameStatus" />
 
     <Button
         android:id="@+id/button_updateStatus"
@@ -73,4 +73,6 @@
         android:text="@string/main_button_updateStatus"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+
 </android.support.constraint.ConstraintLayout>

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -21,6 +22,9 @@ import java.io.InputStream;
 public class MainActivity extends AppCompatActivity {
     public static final String EXTRA_MESSAGE = "dk.kaddu.phoenixbsecompanion.MESSAGE";
     private static final String LOG_TAG = "MainActivity";
+
+    private String star_date="Not Available";
+    private String status="Not Available";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,34 +39,71 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences prefs =
                 PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
-        String xmlQueryUriString = uriBuilder(
-                prefs.getString("nexus_uri", "www.phoenixbse.co.uk"),
-                prefs.getString("nexus_uid", "1"),
-                prefs.getString("nexus_code", "22d9b2c0316adab0f9104571c7ed8eb0"));
+        String xmlQueryUriString = "http://www.phoenixbse.co.uk/?a=xml&uid=197&code=3c3a6f899bd43b329152574c15190a27&sa=game_status";
+//        String xmlQueryUriString = uriBuilder(
+//                prefs.getString("nexus_uri", "www.phoenixbse.co.uk"),
+//                prefs.getString("nexus_uid", "1"),
+//                prefs.getString("nexus_code", "22d9b2c0316adab0f9104571c7ed8eb0"));
         Log.d(LOG_TAG,"xmlQueryUriString = " + xmlQueryUriString);
 
         Uri xmlQueryUri = Uri.parse(xmlQueryUriString);
 
         InputStream gameStatusInputStream = null;
         try {
+            Log.d(LOG_TAG,"Opening gameStatusInputStream");
             gameStatusInputStream = getContentResolver().openInputStream(xmlQueryUri);
-            XmlPullParser parserFactory;
+//            gameStatusInputStream = getAssets().open("file.xml");
+            XmlPullParserFactory parserFactory;
             try {
+                Log.d(LOG_TAG,"Instantiating XmlPullParserFactory");
                 parserFactory = XmlPullParserFactory.newInstance();
-                XmlPullParser parser = ((XmlPullParserFactory) parserFactory).newPullParser();
+                Log.d(LOG_TAG,"Instantiating XmlPullParser");
+                XmlPullParser parser = parserFactory.newPullParser();
+                Log.d(LOG_TAG,"Setting XmlPullParser feature");
                 parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+                Log.d(LOG_TAG,"Setting XmlPullParser input");
                 parser.setInput(gameStatusInputStream, null);
 
-                processParsing(parser);
+                Log.d(LOG_TAG,"Parsing game_status XML");
 
+                int event = parser.getEventType();
+                while (event != XmlPullParser.END_DOCUMENT)  {
+                    String name=parser.getName();
+                    switch (event){
+                        case XmlPullParser.START_TAG:
+                            Log.d(LOG_TAG,"XML start tag name: " + name);
+                            switch (name) {
+                                case "status":
+                                    Log.d(LOG_TAG,"Setting status value");
+                                    status = parser.nextText();
+                                    Log.d(LOG_TAG,"Setting status value = " + status);
+                                    break;
+                                case "star_date":
+                                    Log.d(LOG_TAG,"Setting star_date value");
+                                    star_date = parser.nextText();
+                                    Log.d(LOG_TAG,"Setting star_date value = " + star_date);
+                                    break;
+                            }
+                            break;
+
+                        case XmlPullParser.END_TAG:
+                            Log.d(LOG_TAG,"XML end tag name: " + name);
+                            break;
+                    }
+                    Log.d(LOG_TAG,"Next XML element");
+                    event = parser.next();
+                }
             } catch (XmlPullParserException e) {
+                Log.d(LOG_TAG,"Parsing XML -> XmlPullParserException : " + e.toString());
 
             } catch (Exception e) {
+                Log.d(LOG_TAG,"Parsing XML -> other Exception : " + e.toString());
 
             }
 
         } catch (Exception e) {
             // TODO Handle that the XML file is not available to updateGameStatus()
+            Log.d(LOG_TAG,"Opening XML file -> Exception : " + e.toString());
 
         } finally {
             if (gameStatusInputStream != null) {
@@ -76,7 +117,10 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-
+        TextView stardateTextView = (TextView) findViewById(R.id.textView_current_stardate);
+        stardateTextView.setText(star_date);
+        TextView statusTextView = (TextView) findViewById(R.id.textView_current_gameStatus);
+        statusTextView.setText(status);
     }
 
     private void processParsing (XmlPullParser parser) throws IOException, XmlPullParserException {
