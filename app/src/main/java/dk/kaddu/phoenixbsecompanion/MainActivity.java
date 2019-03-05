@@ -3,19 +3,17 @@ package dk.kaddu.phoenixbsecompanion;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -51,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         InputStream gameStatusInputStream = null;
         try {
             Log.d(LOG_TAG,"Opening gameStatusInputStream");
+// TODO Change to opening a java.net inputstream (?)
             gameStatusInputStream = getContentResolver().openInputStream(xmlQueryUri);
 //            gameStatusInputStream = getAssets().open("file.xml");
             XmlPullParserFactory parserFactory;
