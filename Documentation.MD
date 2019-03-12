@@ -1,6 +1,6 @@
-#Documentation
+# Documentation
 
-XML Interface	 [Recruit]	
+## XML Interface	 [Recruit]	
 XML interface is accessed by going to Personal -> XML Access and generating a full access code.
 This then creates a <ID> and <Code> that allows you to access the site data via your user details.
 
@@ -27,7 +27,8 @@ Notes:
 [1] turn_data can have a &type=file which makes it return the filename of the html fragment on the site
 [2] when turn_data fails it now returns all the possible turns with file names / last update stamps
 [3] Pending orders returns the pending orders (as seen on the turns) if there is no current queued orders. Otherwise it returns the orders in the current queued turn. If you add type=turn you always get the orders that the off-line game has stacked for you and if you add type=current you only get the current orders that are queued.
-Notifcations defines	 [Recruit]	
+
+## Notifcations defines	 [Recruit]	
 NOTE_TURN_DATA => 1			- position_id,system_id,type,squad
 NOTE_NEW_POSITION => 2				- position_id,system_id,type,squad
 NOTE_ACTIVE_MISSION => 3			- mission_id,pos_number
@@ -125,7 +126,7 @@ TRADETYPE_TRADE => 0 				'Trade'
 TRADETYPE_LIFE => 1 				'Life'
 TRADETYPE_DRUGS => 2 				'Drugs'
 
-Flags	 [Recruit]	
+## Flags	 [Recruit]	
 Order Catagory Flags
 ====================
 RDERFLAG_ANY                     0x0           
@@ -169,7 +170,7 @@ POSFLAG_PLATFORM                  0x10
 POSFLAG_AGENT                     0x20           
 POSFLAG_DEBRIS                    0x40    
 
-Periphery Names / IDs
+## Periphery Names / IDs
 =====================
 Cluster                           3
 Caliphate                         9
