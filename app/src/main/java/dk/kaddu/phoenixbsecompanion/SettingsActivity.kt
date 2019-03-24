@@ -14,6 +14,7 @@ import android.preference.Preference
 import android.preference.PreferenceActivity
 import android.support.v7.app.ActionBar
 import android.preference.PreferenceFragment
+// TODO PreferenceFragment is deprecated. Please migrate to newer code
 import android.preference.PreferenceManager
 import android.preference.RingtonePreference
 import android.text.TextUtils
@@ -77,6 +78,7 @@ class SettingsActivity : AppCompatPreferenceActivity() {
      * Make sure to deny any unknown fragments here.
      */
     override fun isValidFragment(fragmentName: String): Boolean {
+// TODO PreferenceFragment is deprecated. Please migrate to newer code
         return (PreferenceFragment::class.java!!.getName() == fragmentName
                 || GeneralPreferenceFragment::class.java!!.getName() == fragmentName
                 || DataSyncPreferenceFragment::class.java!!.getName() == fragmentName
@@ -88,6 +90,7 @@ class SettingsActivity : AppCompatPreferenceActivity() {
      * activity is showing a two-pane settings UI.
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+// TODO PreferenceFragment is deprecated. Please migrate to newer code
     class GeneralPreferenceFragment : PreferenceFragment() {
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
@@ -117,6 +120,7 @@ class SettingsActivity : AppCompatPreferenceActivity() {
      * activity is showing a two-pane settings UI.
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+// TODO PreferenceFragment is deprecated. Please migrate to newer code
     class NotificationPreferenceFragment : PreferenceFragment() {
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
@@ -145,6 +149,7 @@ class SettingsActivity : AppCompatPreferenceActivity() {
      * activity is showing a two-pane settings UI.
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+// TODO PreferenceFragment is deprecated. Please migrate to newer code
     class DataSyncPreferenceFragment : PreferenceFragment() {
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
