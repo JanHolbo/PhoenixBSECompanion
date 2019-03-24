@@ -29,13 +29,15 @@ class MainActivity : AppCompatActivity() {
     /** Called when the user taps the Update Game Status button  */
     fun updateGameStatus(view: View) {
 
-// TODO Change hard coded reference to uid & code to use prefernce based options
-        val xmlQueryUrlString = "https://"              // We want a secure connection to the server
-        xmlQueryUrlString += "www.phoenixbse.co.uk"     // Domain name
-        xmlQueryUrlString += "/?a=xml"                  // We are requesting an XML file
-        xmlQueryUrlString += "&sa=game_status"          // We are requesting the game_status response
-        xmlQueryUrlString += "&uid=1"                   // User ID
-        xmlQueryUrlString += "&code=22d9b2c0316adab0f9104571c7ed8eb0" // "password" for the above user ID
+// TODO Change hard coded reference to uid & code to use preference based options
+        val xmlQueryUrlString = StringBuilder()
+        xmlQueryUrlString.append("https://")                            // We want a secure connection to the server
+        xmlQueryUrlString.append("www.phoenixbse.co.uk")                // Domain name
+        xmlQueryUrlString.append("/?a=xml")                             // We are requesting an XML file
+        xmlQueryUrlString.append("&sa=").append("game_status")          // We are requesting the game_status response
+        xmlQueryUrlString.append("&uid=").append("1")                   // User ID
+        xmlQueryUrlString.append("&code=")
+        xmlQueryUrlString.append("22d9b2c0316adab0f9104571c7ed8eb0")    // "password" for the above user ID
         Log.d(LOG_TAG, "xmlQueryUriString = $xmlQueryUrlString")
 
         var gameStatusInputStream: InputStream? = null
