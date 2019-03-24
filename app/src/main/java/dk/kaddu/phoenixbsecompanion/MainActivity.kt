@@ -1,10 +1,7 @@
 package dk.kaddu.phoenixbsecompanion
 
-import android.content.Intent
-import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
@@ -32,17 +29,21 @@ class MainActivity : AppCompatActivity() {
     /** Called when the user taps the Update Game Status button  */
     fun updateGameStatus(view: View) {
 
-        val xmlQueryUriString = "http://www.phoenixbse.co.uk/?a=xml&uid=197&code=3c3a6f899bd43b329152574c15190a27&sa=game_status"
-        Log.d(LOG_TAG, "xmlQueryUriString = $xmlQueryUriString")
-
-        val xmlQueryUri = Uri.parse(xmlQueryUriString)
+// TODO Change hard coded reference to uid & code to use prefernce based options
+        val xmlQueryUrlString = "https://"              // We want a secure connection to the server
+        xmlQueryUrlString += "www.phoenixbse.co.uk"     // Domain name
+        xmlQueryUrlString += "/?a=xml"                  // We are requesting an XML file
+        xmlQueryUrlString += "&sa=game_status"          // We are requesting the game_status response
+        xmlQueryUrlString += "&uid=1"                   // User ID
+        xmlQueryUrlString += "&code=22d9b2c0316adab0f9104571c7ed8eb0" // "password" for the above user ID
+        Log.d(LOG_TAG, "xmlQueryUriString = $xmlQueryUrlString")
 
         var gameStatusInputStream: InputStream? = null
         try {
             Log.d(LOG_TAG, "Opening gameStatusInputStream")
-            // TODO Change to opening a java.net inputstream (?)
-            gameStatusInputStream = contentResolver.openInputStream(xmlQueryUri)
-            //            gameStatusInputStream = getAssets().open("file.xml");
+// TODO Change from opening a local ressources file to opening a java.net inputstream (?)
+//            gameStatusInputStream = contentResolver.openInputStream(xmlQueryUri)
+            gameStatusInputStream = getAssets().open("file.xml");
             val parserFactory: XmlPullParserFactory
             try {
                 Log.d(LOG_TAG, "Instantiating XmlPullParserFactory")
