@@ -1,16 +1,13 @@
 package dk.kaddu.phoenixbsecompanion
 
-import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.widget.TextView
-
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserException
 import org.xmlpull.v1.XmlPullParserFactory
-
 import java.io.IOException
 import java.io.InputStream
 
@@ -44,7 +41,6 @@ class MainActivity : AppCompatActivity() {
         try {
             Log.d(LOG_TAG, "Opening gameStatusInputStream")
 // TODO Change from opening a local ressources file to opening a java.net inputstream (?)
-//            gameStatusInputStream = contentResolver.openInputStream(xmlQueryUri)
             gameStatusInputStream = getAssets().open("file.xml");
             val parserFactory: XmlPullParserFactory
             try {
