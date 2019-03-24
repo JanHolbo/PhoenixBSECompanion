@@ -43,6 +43,8 @@ class MainActivity : AppCompatActivity() {
         try {
             Log.d(LOG_TAG, "Opening gameStatusInputStream")
 // TODO Change from opening a local ressources file to opening a java.net inputstream (?)
+// TODO move XML parsing away from the main UI thread so as not to lock up this thread.
+// TODO Generalize XML parser code so that it can be re-used
             gameStatusInputStream = getAssets().open("file.xml");
             val parserFactory: XmlPullParserFactory
             try {
