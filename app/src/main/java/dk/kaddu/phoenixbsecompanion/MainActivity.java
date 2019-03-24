@@ -27,6 +27,7 @@ public class MainActivity extends FragmentActivity implements DownloadCallback {
     private boolean downloading = false;
 
     private void startDownload() {
+        Log.d(LOG_TAG,"startDownload() downloading="+downloading+" networkFragment="+networkFragment.toString());
         if (!downloading && networkFragment != null) {
             // Execute the async download.
             networkFragment.startDownload();
@@ -54,6 +55,7 @@ public class MainActivity extends FragmentActivity implements DownloadCallback {
 
     @Override
     public void updateFromDownload(Object result) {
+        Log.d(LOG_TAG,"updateFromDownload()");
         // Update your UI here based on result of download.
     }
 
@@ -89,6 +91,7 @@ public class MainActivity extends FragmentActivity implements DownloadCallback {
 
     @Override
     public void finishDownloading() {
+        Log.d(LOG_TAG,"finishDownloading()");
         downloading = false;
         if (networkFragment != null) {
             networkFragment.cancelDownload();
@@ -97,6 +100,7 @@ public class MainActivity extends FragmentActivity implements DownloadCallback {
 
     /** Called when the user taps the Update Game Status button */
     public void updateGameStatus(View view) {
+        Log.d(LOG_TAG,"updateGameStatus()");
         SharedPreferences prefs =
                 PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 // TODO replace the hardcoded xml query string with the preferences driven uriBuilder string
@@ -107,7 +111,7 @@ public class MainActivity extends FragmentActivity implements DownloadCallback {
                 prefs.getString("nexus_uri", "www.phoenixbse.co.uk"),
                 prefs.getString("nexus_uid", "1"),
                 prefs.getString("nexus_code", "22d9b2c0316adab0f9104571c7ed8eb0"));
-*/        Log.d(LOG_TAG,"xmlQueryUrlString = " + xmlQueryUrlString);
+*/        Log.d(LOG_TAG,"updateGameStatus(): xmlQueryUrlString = " + xmlQueryUrlString);
 
         networkFragment = NetworkFragment.getInstance(getSupportFragmentManager(), xmlQueryUrlString);
 
@@ -207,6 +211,7 @@ Old network code that executed on the main UI thread which is no longer allowed 
 
     private void processParsing (XmlPullParser parser) {
         // TODO add XML parsing code for the Game Status XML response
+        Log.d(LOG_TAG,"processParsing()");
 
     }
 
