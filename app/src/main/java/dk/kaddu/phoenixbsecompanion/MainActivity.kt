@@ -31,13 +31,8 @@ class MainActivity : AppCompatActivity() {
 
     /** Called when the user taps the Update Game Status button  */
     fun updateGameStatus(view: View) {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(baseContext)
 
         val xmlQueryUriString = "http://www.phoenixbse.co.uk/?a=xml&uid=197&code=3c3a6f899bd43b329152574c15190a27&sa=game_status"
-        //        String xmlQueryUriString = uriBuilder(
-        //                prefs.getString("nexus_uri", "www.phoenixbse.co.uk"),
-        //                prefs.getString("nexus_uid", "1"),
-        //                prefs.getString("nexus_code", "22d9b2c0316adab0f9104571c7ed8eb0"));
         Log.d(LOG_TAG, "xmlQueryUriString = $xmlQueryUriString")
 
         val xmlQueryUri = Uri.parse(xmlQueryUriString)
@@ -121,17 +116,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-
-    private fun uriBuilder(uriBase: String, uid: String, code: String): String {
-        val builder = Uri.Builder()
-        builder.scheme("https")
-                .authority(uriBase)
-                .appendQueryParameter("a", "xml")
-                .appendQueryParameter("uid", uid)
-                .appendQueryParameter("code", code)
-                .appendQueryParameter("sa", "game_status")
-        return builder.build().toString()
-    }
 
     companion object {
         val EXTRA_MESSAGE = "dk.kaddu.phoenixbsecompanion.MESSAGE"
