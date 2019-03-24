@@ -27,6 +27,8 @@ class MainActivity : AppCompatActivity() {
     fun updateGameStatus(view: View) {
 
 // TODO Change hard coded reference to uid & code to use preference based options
+// Please note that the old hard coded uid and code have now been removed from the Phoenix Nexus server
+//  so that it causes no network security holes
         val xmlQueryUrlString = StringBuilder()
         xmlQueryUrlString.append("https://")                            // We want a secure connection to the server
         xmlQueryUrlString.append("www.phoenixbse.co.uk")                // Domain name
