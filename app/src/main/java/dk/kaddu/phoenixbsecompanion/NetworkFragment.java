@@ -38,6 +38,7 @@ public class NetworkFragment extends Fragment {
      * from.
      */
     public static NetworkFragment getInstance(FragmentManager fragmentManager, String url) {
+        Log.d(LOG_TAG,"static getInstance() url="+url);
         NetworkFragment networkFragment = new NetworkFragment();
         Bundle args = new Bundle();
         args.putString(URL_KEY, url);
@@ -48,13 +49,16 @@ public class NetworkFragment extends Fragment {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+        Log.d(LOG_TAG,"onCreate()");
         super.onCreate(savedInstanceState);
         urlString = getArguments().getString(URL_KEY);
+        Log.d(LOG_TAG,"onCreate() urlString="+urlString);
         // TODO add needed code to onCreate()
     }
 
     @Override
     public void onAttach(Context context) {
+        Log.d(LOG_TAG,"onAttach()");
         super.onAttach(context);
         // Host Activity will handle callbacks from task.
         mCallback = (DownloadCallback<String>) context;
@@ -62,6 +66,7 @@ public class NetworkFragment extends Fragment {
 
     @Override
     public void onDetach() {
+        Log.d(LOG_TAG,"onDetach()");
         super.onDetach();
         // Clear reference to host Activity to avoid memory leak.
         mCallback = null;
@@ -69,15 +74,17 @@ public class NetworkFragment extends Fragment {
 
     @Override
     public void onDestroy() {
+        Log.d(LOG_TAG,"onDestroy()");
         // Cancel task when Fragment is destroyed.
         cancelDownload();
         super.onDestroy();
     }
 
     /**
-     * Start non-bloclking execution of DownloadTask.
+     * Start non-blocking execution of DownloadTask.
      */
     public void startDownload() {
+        Log.d(LOG_TAG,"startDownload()");
         cancelDownload();
         downloadTask = new DownloadTask(mCallback);
         downloadTask.execute(urlString);
@@ -87,6 +94,7 @@ public class NetworkFragment extends Fragment {
      * Cancel (and interrupt if necessary) any ongoing DownloadTask execution.
      */
     public void cancelDownload() {
+        Log.d(LOG_TAG,"cancelDownload()");
         if (downloadTask != null) {
             downloadTask.cancel(true);
         }
@@ -130,12 +138,14 @@ public class NetworkFragment extends Fragment {
          */
         @Override
         protected void onPreExecute() {
+            Log.d(LOG_TAG,"onPreExecute()");
             if (mCallback != null) {
                 NetworkInfo networkInfo = mCallback.getActiveNetworkInfo();
                 if (networkInfo == null || !networkInfo.isConnected() ||
                         (networkInfo.getType() != ConnectivityManager.TYPE_WIFI
                                 && networkInfo.getType() != ConnectivityManager.TYPE_MOBILE)) {
                     // If no connectivity, cancel task and update Callback with null data.
+                    Log.d(LOG_TAG,"onPreExecute(): no connection - cancel the download");
                     mCallback.updateFromDownload(null);
                     cancel(true);
                 }
@@ -147,19 +157,32 @@ public class NetworkFragment extends Fragment {
          */
         @Override
         protected DownloadTask.Result doInBackground(String... urls) {
+            Log.d(LOG_TAG,"DownloadTask.Result doInBackground() urls="+urls);
             Result result = null;
+            Log.d(LOG_TAG,"DownloadTask.Result doInBackground() (0) isCancelled()="+isCancelled()+" urls="+urls+" urls.length="+urls.length);
+            // TODO isCancelled() does not exist? Find out where it has gone.
             if (!isCancelled() && urls != null && urls.length > 0) {
-                String urlString = urls[0];
-                try {
-                    URL url = new URL(urlString);
-                    String resultString = parseGameStatusXml(url);
-                    if (resultString != null) {
-                        result = new Result(resultString);
-                    } else {
-                        throw new IOException("No response received.");
+                Log.d(LOG_TAG,"DownloadTask.Result doInBackground() (1)");
+                if (urls != null && urls.length > 0) {
+                    Log.d(LOG_TAG,"DownloadTask.Result doInBackground() (2) urls[0]="+urls[0]);
+                    String urlString = urls[0];
+                    Log.d(LOG_TAG,"DownloadTask.Result doInBackground() (3) urlString="+urlString);
+                    try {
+                        Log.d(LOG_TAG,"DownloadTask.Result doInBackground() (4) urlString="+urlString);
+                        URL url = new URL(urlString);
+                        Log.d(LOG_TAG,"DownloadTask.Result doInBackground() (5) url="+url);
+                        String resultString = parseGameStatusXml(url);
+                        if (resultString != null) {
+                            result = new Result(resultString);
+                        } else {
+                            Log.d(LOG_TAG,"DownloadTask.Result doInBackground() throw IOException: No response received.");
+                            throw new IOException("No response received.");
+                        }
+                    } catch(Exception e) {
+                        Log.d(LOG_TAG,"DownloadTask.Result doInBackground() exception: "+e.toString());
+
+                        result = new Result(e);
                     }
-                } catch(Exception e) {
-                    result = new Result(e);
                 }
             }
             return result;
@@ -170,6 +193,7 @@ public class NetworkFragment extends Fragment {
          */
         @Override
         protected void onPostExecute(Result result) {
+            Log.d(LOG_TAG,"onPostExecute()");
             if (result != null && mCallback != null) {
                 if (result.mException != null) {
                     mCallback.updateFromDownload(result.mException.getMessage());
@@ -193,6 +217,7 @@ public class NetworkFragment extends Fragment {
          * it will throw an IOException.
          */
         private String parseGameStatusXml(URL url) throws IOException {
+            Log.d(LOG_TAG,"parseGameStatusXml()");
             InputStream stream = null;
             HttpsURLConnection connection = null;
             String result = null;
@@ -243,6 +268,7 @@ public class NetworkFragment extends Fragment {
             String star_date="Not Available";
             String status="Not Available";
 
+            Log.d(LOG_TAG,"readStream()");
 
 // TODO replace the former stream read code from the android-NetworkConnect example with XML parsing code
 /* left over code from android-NetworkConnect - TO BE REMOVED
@@ -272,51 +298,49 @@ public class NetworkFragment extends Fragment {
 
             XmlPullParserFactory parserFactory;
             try {
-                Log.d(LOG_TAG,"Instantiating XmlPullParserFactory");
+                Log.d(LOG_TAG,"readStream(): Instantiating XmlPullParserFactory");
                 parserFactory = XmlPullParserFactory.newInstance();
-                Log.d(LOG_TAG,"Instantiating XmlPullParser");
+                Log.d(LOG_TAG,"readStream(): Instantiating XmlPullParser");
                 XmlPullParser parser = parserFactory.newPullParser();
-                Log.d(LOG_TAG,"Setting XmlPullParser feature");
+                Log.d(LOG_TAG,"readStream(): Setting XmlPullParser feature");
                 parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-                Log.d(LOG_TAG,"Setting XmlPullParser input");
+                Log.d(LOG_TAG,"readStream(): Setting XmlPullParser input");
                 parser.setInput(stream, null);
 
-                Log.d(LOG_TAG,"Parsing game_status XML");
+                Log.d(LOG_TAG,"readStream(): Parsing game_status XML");
 
                 int event = parser.getEventType();
                 while (event != XmlPullParser.END_DOCUMENT)  {
                     String name=parser.getName();
                     switch (event){
                         case XmlPullParser.START_TAG:
-                            Log.d(LOG_TAG,"XML start tag name: " + name);
+                            Log.d(LOG_TAG,"readStream(): XML start tag name: " + name);
                             switch (name) {
                                 case "status":
-                                    Log.d(LOG_TAG,"Setting status value");
+                                    Log.d(LOG_TAG,"readStream(): Setting status value");
                                     status = parser.nextText();
-                                    Log.d(LOG_TAG,"Setting status value = " + status);
+                                    Log.d(LOG_TAG,"readStream(): Setting status value = " + status);
                                     break;
                                 case "star_date":
-                                    Log.d(LOG_TAG,"Setting star_date value");
+                                    Log.d(LOG_TAG,"readStream(): Setting star_date value");
                                     star_date = parser.nextText();
-                                    Log.d(LOG_TAG,"Setting star_date value = " + star_date);
+                                    Log.d(LOG_TAG,"readStream(): Setting star_date value = " + star_date);
                                     break;
                             }
                             break;
 
                         case XmlPullParser.END_TAG:
-                            Log.d(LOG_TAG,"XML end tag name: " + name);
+                            Log.d(LOG_TAG,"readStream(): XML end tag name: " + name);
                             break;
                     }
-                    Log.d(LOG_TAG,"Next XML element");
+                    Log.d(LOG_TAG,"readStream(): Next XML element");
                     event = parser.next();
                 }
             } catch (XmlPullParserException e) {
-                Log.d(LOG_TAG,"Parsing XML -> XmlPullParserException : " + e.toString());
+                Log.d(LOG_TAG,"readStream(): Parsing XML -> XmlPullParserException : " + e.toString());
             } catch (Exception e) {
-                Log.d(LOG_TAG,"Parsing XML -> other Exception : " + e.toString());
+                Log.d(LOG_TAG,"readStream(): Parsing XML -> other Exception : " + e.toString());
             }
-
-
 
             return result;
         }
