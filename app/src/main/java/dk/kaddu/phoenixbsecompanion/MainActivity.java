@@ -128,12 +128,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    /** Called when the user taps the Preferences button */
-    public void viewPreferences(View view) {
-        Intent intent = new Intent(this, SettingsActivity.class);
-        startActivity(intent);
-    }
-
     private String uriBuilder(String uriBase, String uid, String code) {
         Uri.Builder builder = new Uri.Builder();
         builder.scheme("https")
