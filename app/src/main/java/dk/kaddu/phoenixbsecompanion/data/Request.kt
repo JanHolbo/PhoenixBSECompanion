@@ -1,11 +1,10 @@
-package dk.kaddu.phoenixbsecompanion
+package dk.kaddu.phoenixbsecompanion.data
 
 import android.util.Log
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserException
 import org.xmlpull.v1.XmlPullParserFactory
 import java.io.IOException
-import java.io.InputStream
 import java.net.URL
 
 class Request(private val url: String) {

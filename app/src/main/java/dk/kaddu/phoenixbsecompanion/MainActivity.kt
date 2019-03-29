@@ -2,17 +2,10 @@ package dk.kaddu.phoenixbsecompanion
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
-import android.view.View
-import android.widget.TextView
+import dk.kaddu.phoenixbsecompanion.data.Request
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.longToast
 import org.jetbrains.anko.uiThread
-import org.xmlpull.v1.XmlPullParser
-import org.xmlpull.v1.XmlPullParserException
-import org.xmlpull.v1.XmlPullParserFactory
-import java.io.IOException
-import java.io.InputStream
 
 class MainActivity : AppCompatActivity() {
 
