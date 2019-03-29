@@ -5,6 +5,9 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.longToast
+import org.jetbrains.anko.uiThread
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserException
 import org.xmlpull.v1.XmlPullParserFactory
@@ -16,11 +19,25 @@ class MainActivity : AppCompatActivity() {
     private var star_date = "Not Available"
     private var status = "Not Available"
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        updateGameStatus(this.findViewById(R.id.button_updateStatus))
+        val xmlQueryUrlString = StringBuilder()
+        xmlQueryUrlString.append("https://")                            // We want a secure connection to the server
+        xmlQueryUrlString.append("www.phoenixbse.co.uk")                // Domain name
+        xmlQueryUrlString.append("/?a=xml")                             // We are requesting an XML file
+        xmlQueryUrlString.append("&sa=").append("game_status")          // We are requesting the game_status response
+        xmlQueryUrlString.append("&uid=").append("1")                   // User ID
+        xmlQueryUrlString.append("&code=")
+        xmlQueryUrlString.append("22d9b2c0316adab0f9104571c7ed8eb0")    // "password" for the above user ID
+        doAsync {
+            Request(xmlQueryUrlString.toString()).run()
+            uiThread { longToast("Request performed") }
+        }
+
+//        updateGameStatus(this.findViewById(R.id.button_updateStatus))
     }
 
     /** Called when the user taps the Update Game Status button  */
@@ -37,64 +54,64 @@ class MainActivity : AppCompatActivity() {
         xmlQueryUrlString.append("&uid=").append("1")                   // User ID
         xmlQueryUrlString.append("&code=")
         xmlQueryUrlString.append("22d9b2c0316adab0f9104571c7ed8eb0")    // "password" for the above user ID
-        Log.d(LOG_TAG, "xmlQueryUriString = $xmlQueryUrlString")
+        Log.d(javaClass.simpleName, "xmlQueryUriString = $xmlQueryUrlString")
 
         var gameStatusInputStream: InputStream? = null
         try {
-            Log.d(LOG_TAG, "Opening gameStatusInputStream")
+            Log.d(javaClass.simpleName, "Opening gameStatusInputStream")
 // TODO Change from opening a local ressources file to opening a java.net inputstream (?)
 // TODO move XML parsing away from the main UI thread so as not to lock up this thread.
 // TODO Generalize XML parser code so that it can be re-used
             gameStatusInputStream = getAssets().open("file.xml");
             val parserFactory: XmlPullParserFactory
             try {
-                Log.d(LOG_TAG, "Instantiating XmlPullParserFactory")
+                Log.d(javaClass.simpleName, "Instantiating XmlPullParserFactory")
                 parserFactory = XmlPullParserFactory.newInstance()
-                Log.d(LOG_TAG, "Instantiating XmlPullParser")
+                Log.d(javaClass.simpleName, "Instantiating XmlPullParser")
                 val parser = parserFactory.newPullParser()
-                Log.d(LOG_TAG, "Setting XmlPullParser feature")
+                Log.d(javaClass.simpleName, "Setting XmlPullParser feature")
                 parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false)
-                Log.d(LOG_TAG, "Setting XmlPullParser input")
+                Log.d(javaClass.simpleName, "Setting XmlPullParser input")
                 parser.setInput(gameStatusInputStream, null)
 
-                Log.d(LOG_TAG, "Parsing game_status XML")
+                Log.d(javaClass.simpleName, "Parsing game_status XML")
 
                 var event = parser.eventType
                 while (event != XmlPullParser.END_DOCUMENT) {
                     val name = parser.name
                     when (event) {
                         XmlPullParser.START_TAG -> {
-                            Log.d(LOG_TAG, "XML start tag name: $name")
+                            Log.d(javaClass.simpleName, "XML start tag name: $name")
                             when (name) {
                                 "status" -> {
-                                    Log.d(LOG_TAG, "Setting status value")
+                                    Log.d(javaClass.simpleName, "Setting status value")
                                     status = parser.nextText()
-                                    Log.d(LOG_TAG, "Setting status value = $status")
+                                    Log.d(javaClass.simpleName, "Setting status value = $status")
                                 }
                                 "star_date" -> {
-                                    Log.d(LOG_TAG, "Setting star_date value")
+                                    Log.d(javaClass.simpleName, "Setting star_date value")
                                     star_date = parser.nextText()
-                                    Log.d(LOG_TAG, "Setting star_date value = $star_date")
+                                    Log.d(javaClass.simpleName, "Setting star_date value = $star_date")
                                 }
                             }
                         }
 
-                        XmlPullParser.END_TAG -> Log.d(LOG_TAG, "XML end tag name: $name")
+                        XmlPullParser.END_TAG -> Log.d(javaClass.simpleName, "XML end tag name: $name")
                     }
-                    Log.d(LOG_TAG, "Next XML element")
+                    Log.d(javaClass.simpleName, "Next XML element")
                     event = parser.next()
                 }
             } catch (e: XmlPullParserException) {
-                Log.d(LOG_TAG, "Parsing XML -> XmlPullParserException : $e")
+                Log.d(javaClass.simpleName, "Parsing XML -> XmlPullParserException : $e")
 
             } catch (e: Exception) {
-                Log.d(LOG_TAG, "Parsing XML -> other Exception : $e")
+                Log.d(javaClass.simpleName, "Parsing XML -> other Exception : $e")
 
             }
 
         } catch (e: Exception) {
             // TODO Handle that the XML file is not available to updateGameStatus()
-            Log.d(LOG_TAG, "Opening XML file -> Exception : $e")
+            Log.d(javaClass.simpleName, "Opening XML file -> Exception : $e")
 
         } finally {
             if (gameStatusInputStream != null) {
@@ -107,10 +124,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        val stardateTextView = findViewById<View>(R.id.textView_current_stardate) as TextView
-        stardateTextView.text = star_date
-        val statusTextView = findViewById<View>(R.id.textView_current_gameStatus) as TextView
-        statusTextView.text = status
     }
 
     @Throws(IOException::class, XmlPullParserException::class)
