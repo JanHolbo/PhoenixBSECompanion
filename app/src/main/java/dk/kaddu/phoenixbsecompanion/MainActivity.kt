@@ -1,7 +1,10 @@
 package dk.kaddu.phoenixbsecompanion
 
+import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.widget.Button
 import dk.kaddu.phoenixbsecompanion.data.Request
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.longToast
@@ -11,11 +14,16 @@ class MainActivity : AppCompatActivity() {
 
     private var star_date = "Not Available"
     private var status = "Not Available"
+    internal lateinit var gameStatusButton: Button
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        gameStatusButton = findViewById<Button>(R.id.gameStatusButton)
+
+        if (isNetworkConnected()) {
 
         val xmlQueryUrlString = StringBuilder()
         xmlQueryUrlString.append("https://")                            // We want a secure connection to the server
@@ -29,9 +37,17 @@ class MainActivity : AppCompatActivity() {
             Request(xmlQueryUrlString.toString()).run()
             uiThread { longToast("Request performed") }
         }
+        } else {
+            gameStatusButton.text = getString(R.string.online_status_offline)
+        }
 
     }
 
+    private fun isNetworkConnected(): Boolean {
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager //1
+        val networkInfo = connectivityManager.activeNetworkInfo //2
+        return networkInfo != null && networkInfo.isConnected //3
+    }
 
 
     companion object {

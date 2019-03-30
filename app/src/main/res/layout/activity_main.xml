@@ -20,7 +20,7 @@
             android:id="@+id/gameStatusButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Ready" />
+            android:text="@string/game_status_text_ready" />
 
     </FrameLayout>
 </android.support.constraint.ConstraintLayout>
