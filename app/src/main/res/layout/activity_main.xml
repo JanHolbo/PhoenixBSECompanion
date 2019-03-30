@@ -16,10 +16,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <TextView
-            android:id="@+id/gameStatusTextView"
+        <Button
+            android:id="@+id/gameStatusButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="Ready" />
+
     </FrameLayout>
 </android.support.constraint.ConstraintLayout>
