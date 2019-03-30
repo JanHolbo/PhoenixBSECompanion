@@ -6,4 +6,5 @@
     <string name="online_status_offline">Device is offline</string>
     <string name="online_status_wifi">Connected to WiFi network</string>
     <string name="online_status_cellular">Connected to Cellular network</string>
+    <string name="game_status_current">Star Date %s. Status: %s</string>
 </resources>

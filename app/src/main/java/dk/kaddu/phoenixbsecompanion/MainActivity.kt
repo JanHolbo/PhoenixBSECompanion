@@ -5,6 +5,7 @@ import android.net.ConnectivityManager
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.Button
+import dk.kaddu.phoenixbsecompanion.data.GameStatus
 import dk.kaddu.phoenixbsecompanion.data.Request
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.longToast
@@ -22,6 +23,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         gameStatusButton = findViewById<Button>(R.id.gameStatusButton)
+        gameStatusButton.setOnClickListener { view ->
+            checkGameStatus()
+        }
 
         checkGameStatus()
 
@@ -34,6 +38,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkGameStatus() {
+
+        var currentGameStatus = GameStatus(0, 0, 0, 0, 0, 0, 0, 0, "", "")
+
         if (isNetworkConnected()) {
 
             val xmlQueryUrlString = StringBuilder()
@@ -45,9 +52,10 @@ class MainActivity : AppCompatActivity() {
             xmlQueryUrlString.append("&code=")
             xmlQueryUrlString.append("22d9b2c0316adab0f9104571c7ed8eb0")    // "password" for the above user ID
             doAsync {
-                Request(xmlQueryUrlString.toString()).run()
-                uiThread { longToast("Request performed") }
+                currentGameStatus = Request(xmlQueryUrlString.toString()).run()
+                gameStatusButton.text = getString(R.string.game_status_current, currentGameStatus.star_date, currentGameStatus.status)
             }
+
         } else {
             gameStatusButton.text = getString(R.string.online_status_offline)
         }

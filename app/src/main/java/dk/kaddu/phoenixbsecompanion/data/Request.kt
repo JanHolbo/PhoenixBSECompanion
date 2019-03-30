@@ -9,11 +9,9 @@ import java.net.URL
 
 class Request(private val url: String) {
 
-    private var star_date = "Not Available"
-    private var status = "Not Available"
+    private var currentGameStatus = GameStatus (0, 0, 0, 0, 0, 0, 0, 0, "", "")
 
-
-    fun run() {
+    fun run(): GameStatus {
 
         var xmlStream = URL(url).openStream()
 
@@ -39,16 +37,17 @@ class Request(private val url: String) {
                     when (event) {
                         XmlPullParser.START_TAG -> {
                             Log.d(javaClass.simpleName, "XML start tag name: $name")
+// TODO add code to set all values from the game_status XML file
                             when (name) {
                                 "status" -> {
                                     Log.d(javaClass.simpleName, "Setting status value")
-                                    status = parser.nextText()
-                                    Log.d(javaClass.simpleName, "Setting status value = $status")
+                                    currentGameStatus.status = parser.nextText()
+                                    Log.d(javaClass.simpleName, "Setting status value = $currentGameStatus.status")
                                 }
                                 "star_date" -> {
                                     Log.d(javaClass.simpleName, "Setting star_date value")
-                                    star_date = parser.nextText()
-                                    Log.d(javaClass.simpleName, "Setting star_date value = $star_date")
+                                    currentGameStatus.star_date = parser.nextText()
+                                    Log.d(javaClass.simpleName, "Setting star_date value = $currentGameStatus.star_date")
                                 }
                             }
                         }
@@ -67,7 +66,7 @@ class Request(private val url: String) {
             }
 
         } catch (e: Exception) {
-            // TODO Handle that the XML file is not available to updateGameStatus()
+            // TODO Handle that the XML file is not available
             Log.d(javaClass.simpleName, "Opening XML file -> Exception : $e")
 
         } finally {
@@ -81,6 +80,7 @@ class Request(private val url: String) {
             }
         }
 
+        return currentGameStatus
     }
 
 }
