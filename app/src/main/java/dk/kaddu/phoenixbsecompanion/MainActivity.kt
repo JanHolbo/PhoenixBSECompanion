@@ -23,23 +23,7 @@ class MainActivity : AppCompatActivity() {
 
         gameStatusButton = findViewById<Button>(R.id.gameStatusButton)
 
-        if (isNetworkConnected()) {
-
-        val xmlQueryUrlString = StringBuilder()
-        xmlQueryUrlString.append("https://")                            // We want a secure connection to the server
-        xmlQueryUrlString.append("www.phoenixbse.co.uk")                // Domain name
-        xmlQueryUrlString.append("/?a=xml")                             // We are requesting an XML file
-        xmlQueryUrlString.append("&sa=").append("game_status")          // We are requesting the game_status response
-        xmlQueryUrlString.append("&uid=").append("1")                   // User ID
-        xmlQueryUrlString.append("&code=")
-        xmlQueryUrlString.append("22d9b2c0316adab0f9104571c7ed8eb0")    // "password" for the above user ID
-        doAsync {
-            Request(xmlQueryUrlString.toString()).run()
-            uiThread { longToast("Request performed") }
-        }
-        } else {
-            gameStatusButton.text = getString(R.string.online_status_offline)
-        }
+        checkGameStatus()
 
     }
 
@@ -49,9 +33,26 @@ class MainActivity : AppCompatActivity() {
         return networkInfo != null && networkInfo.isConnected //3
     }
 
+    private fun checkGameStatus() {
+        if (isNetworkConnected()) {
+
+            val xmlQueryUrlString = StringBuilder()
+            xmlQueryUrlString.append("https://")                            // We want a secure connection to the server
+            xmlQueryUrlString.append("www.phoenixbse.co.uk")                // Domain name
+            xmlQueryUrlString.append("/?a=xml")                             // We are requesting an XML file
+            xmlQueryUrlString.append("&sa=").append("game_status")          // We are requesting the game_status response
+            xmlQueryUrlString.append("&uid=").append("1")                   // User ID
+            xmlQueryUrlString.append("&code=")
+            xmlQueryUrlString.append("22d9b2c0316adab0f9104571c7ed8eb0")    // "password" for the above user ID
+            doAsync {
+                Request(xmlQueryUrlString.toString()).run()
+                uiThread { longToast("Request performed") }
+            }
+        } else {
+            gameStatusButton.text = getString(R.string.online_status_offline)
+        }
+    }
 
     companion object {
-        val EXTRA_MESSAGE = "dk.kaddu.phoenixbsecompanion.MESSAGE"
-        private val LOG_TAG = "MainActivity"
     }
 }
