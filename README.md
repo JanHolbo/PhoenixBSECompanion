@@ -10,11 +10,9 @@ Stable Branch:      None yet
 Development Branch: 0.2 Beta
 
 Milestones:
-
+-----------
 0.2 Beta
-
 This release. Reads the game status via the PhoenixBSE Nexus XML interface and displays this on screen
 
 0.3 Beta
-
-Version 0.3 will save historical Game Status data and calculate and display predicted completion times
+Will save historical Game Status data and calculate and display predicted completion times
