@@ -37,7 +37,6 @@ class Request(private val url: String) {
                     when (event) {
                         XmlPullParser.START_TAG -> {
                             Log.d(javaClass.simpleName, "XML start tag name: $name")
-// TODO add code to set all values from the game_status XML file
                             when (name) {
                                 "status" -> {
                                     Log.d(javaClass.simpleName, "Setting status value")
