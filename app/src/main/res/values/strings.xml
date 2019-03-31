@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Phoenix BSE Companion</string>
+    <string name="app_name">PhoenixBSE Companion</string>
 
     <!-- Strings related to MainActivity -->
     <string name="game_status_text_ready">Ready</string>
