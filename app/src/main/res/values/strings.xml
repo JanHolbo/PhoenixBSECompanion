@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">PhoenixBSE Companion</string>
+    <string name="app_version_name">0.21 Beta</string>
 
     <!-- Strings related to MainActivity -->
     <string name="game_status_text_ready">Ready</string>
