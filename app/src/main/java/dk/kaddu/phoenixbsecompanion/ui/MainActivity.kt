@@ -1,15 +1,14 @@
-package dk.kaddu.phoenixbsecompanion
+package dk.kaddu.phoenixbsecompanion.ui
 
 import android.content.Context
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.Button
+import dk.kaddu.phoenixbsecompanion.R
 import dk.kaddu.phoenixbsecompanion.data.GameStatus
 import dk.kaddu.phoenixbsecompanion.data.Request
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.longToast
-import org.jetbrains.anko.uiThread
 
 class MainActivity : AppCompatActivity() {
 
