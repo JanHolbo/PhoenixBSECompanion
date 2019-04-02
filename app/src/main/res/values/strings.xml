@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">PhoenixBSE Companion</string>
-    <string name="app_version_name">0.21 Beta</string>
+    <string name="app_name">Phoenix BSE Companion</string>
+    <string name="app_version_name">0.22 Beta</string>
 
     <!-- Strings related to MainActivity -->
     <string name="game_status_text_ready">Ready</string>
@@ -8,4 +8,7 @@
     <string name="online_status_wifi">Connected to WiFi network</string>
     <string name="online_status_cellular">Connected to Cellular network</string>
     <string name="game_status_current">Star Date %s. Status: %s</string>
+    <string name="about_title">%s %s</string>
+    <string name="about_message">A companion app to Phoenix BSE (http://www.phoenixbse.co.uk) run by KJC Games (http://www.kjcgames.co.uk)\n\nApp Icon image and background image by http://www.freepik.com\n\n(c) 2019 by Kaddu Software."</string>
+    <string name="about_menu">About</string>
 </resources>

@@ -3,8 +3,12 @@ package dk.kaddu.phoenixbsecompanion.ui
 import android.content.Context
 import android.net.ConnectivityManager
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Button
+import dk.kaddu.phoenixbsecompanion.BuildConfig
 import dk.kaddu.phoenixbsecompanion.R
 import dk.kaddu.phoenixbsecompanion.data.GameStatus
 import dk.kaddu.phoenixbsecompanion.data.Request
@@ -12,6 +16,7 @@ import org.jetbrains.anko.doAsync
 
 class MainActivity : AppCompatActivity() {
 
+// TODO remove star_date and status when possible
     private var star_date = "Not Available"
     private var status = "Not Available"
     internal lateinit var gameStatusButton: Button
@@ -28,6 +33,19 @@ class MainActivity : AppCompatActivity() {
 
         checkGameStatus()
 
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        super.onCreateOptionsMenu(menu)
+        menuInflater.inflate(R.menu.menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.action_about) {
+            showInfo()
+        }
+        return true
     }
 
     private fun isNetworkConnected(): Boolean {
@@ -58,6 +76,15 @@ class MainActivity : AppCompatActivity() {
         } else {
             gameStatusButton.text = getString(R.string.online_status_offline)
         }
+    }
+
+    private fun showInfo() {
+        val dialogTitle = getString(R.string.about_title, getString(R.string.app_name), getString(R.string.app_version_name))
+        val dialogMessage = getString(R.string.about_message)
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(dialogTitle)
+        builder.setMessage(dialogMessage)
+        builder.create().show()
     }
 
     companion object {
