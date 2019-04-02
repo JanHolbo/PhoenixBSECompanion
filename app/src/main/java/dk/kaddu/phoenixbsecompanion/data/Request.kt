@@ -119,6 +119,8 @@ class Request(private val url: String) {
             }
         }
 
+
+
         return currentGameStatus
     }
 
