@@ -1,10 +1,15 @@
 package dk.kaddu.phoenixbsecompanion.ui
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProvider
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
@@ -20,7 +25,7 @@ class MainActivity : AppCompatActivity() {
     private var star_date = "Not Available"
     private var status = "Not Available"
     internal lateinit var gameStatusButton: Button
-
+    private lateinit var gameStatusViewModel: GameStatusViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +37,16 @@ class MainActivity : AppCompatActivity() {
         }
 
         checkGameStatus()
+
+        gameStatusViewModel = ViewModelProviders.of(this).get(GameStatusViewModel::class.java)
+        gameStatusViewModel.allGameStatus.observe(this, Observer { gameStatus ->        val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
+            val adapter = GameStatusListAdapter(this)
+            recyclerView.adapter = adapter
+            recyclerView.layoutManager = LinearLayoutManager(this)
+
+            // Update the cached copy of the gameStatus in the adapter
+            gameStatus?.let { adapter.setGameStatusList(it)}
+        })
 
     }
 
@@ -70,6 +85,7 @@ class MainActivity : AppCompatActivity() {
             xmlQueryUrlString.append("22d9b2c0316adab0f9104571c7ed8eb0")    // "password" for the above user ID
             doAsync {
                 currentGameStatus = Request(xmlQueryUrlString.toString()).run()
+                gameStatusViewModel.insert(currentGameStatus)
                 gameStatusButton.text = getString(R.string.game_status_current, currentGameStatus.star_date, currentGameStatus.status)
             }
 
@@ -88,5 +104,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
+        const val newGameStatusActivityRequestCode = 1
     }
 }
