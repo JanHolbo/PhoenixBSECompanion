@@ -13,40 +13,58 @@ import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
+import android.widget.TextView
 import dk.kaddu.phoenixbsecompanion.BuildConfig
 import dk.kaddu.phoenixbsecompanion.R
-import dk.kaddu.phoenixbsecompanion.data.GameStatus
-import dk.kaddu.phoenixbsecompanion.data.Request
+import dk.kaddu.phoenixbsecompanion.data.*
 import org.jetbrains.anko.doAsync
 
 class MainActivity : AppCompatActivity() {
 
 // TODO remove star_date and status when possible
+/*
     private var star_date = "Not Available"
     private var status = "Not Available"
+*/
     internal lateinit var gameStatusButton: Button
+    internal lateinit var mainActivityInfoTextView: TextView
     private lateinit var gameStatusViewModel: GameStatusViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+// TODO remove all references to gameStatusButton when possible
+
         gameStatusButton = findViewById<Button>(R.id.gameStatusButton)
         gameStatusButton.setOnClickListener { view ->
             checkGameStatus()
         }
 
+
         checkGameStatus()
+
+        val adapter = GameStatusListAdapter(this)
 
         gameStatusViewModel = ViewModelProviders.of(this).get(GameStatusViewModel::class.java)
         gameStatusViewModel.allGameStatus.observe(this, Observer { gameStatus ->        val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
-            val adapter = GameStatusListAdapter(this)
             recyclerView.adapter = adapter
             recyclerView.layoutManager = LinearLayoutManager(this)
 
             // Update the cached copy of the gameStatus in the adapter
             gameStatus?.let { adapter.setGameStatusList(it)}
         })
+
+        mainActivityInfoTextView = findViewById<TextView>(R.id.mainActivityInfoTextView)
+        var tmpInfoText: String =
+                getString(R.string.about_title, getString(R.string.app_name), getString(R.string.app_version_name)) + "\n" +
+                        getString(R.string.about_message) + "\n\n" +
+                        getString(R.string.info_text_game_status_loaded, "?") +
+                        getString(R.string.info_text_star_date, "???.??.?") +
+                        getString(R.string.info_text_ready)
+        mainActivityInfoTextView.text=tmpInfoText
+
+
 
     }
 
@@ -70,11 +88,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkGameStatus() {
-
         var currentGameStatus = GameStatus(0, 0, 0, 0, 0, 0, 0, 0, "", "")
 
         if (isNetworkConnected()) {
-
             val xmlQueryUrlString = StringBuilder()
             xmlQueryUrlString.append("https://")                            // We want a secure connection to the server
             xmlQueryUrlString.append("www.phoenixbse.co.uk")                // Domain name
@@ -88,7 +104,6 @@ class MainActivity : AppCompatActivity() {
                 gameStatusViewModel.insert(currentGameStatus)
                 gameStatusButton.text = getString(R.string.game_status_current, currentGameStatus.star_date, currentGameStatus.status)
             }
-
         } else {
             gameStatusButton.text = getString(R.string.online_status_offline)
         }
