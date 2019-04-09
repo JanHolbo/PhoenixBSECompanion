@@ -15,6 +15,7 @@ import android.view.MenuItem
 import android.widget.Button
 import android.widget.TextView
 import dk.kaddu.phoenixbsecompanion.BuildConfig
+import dk.kaddu.phoenixbsecompanion.PhoenixBSECompanion
 import dk.kaddu.phoenixbsecompanion.R
 import dk.kaddu.phoenixbsecompanion.data.*
 import org.jetbrains.anko.doAsync
@@ -26,28 +27,64 @@ class MainActivity : AppCompatActivity() {
     private var star_date = "Not Available"
     private var status = "Not Available"
 */
+
+    // view variables
+// TODO remove all references to gameStatusButton when possible
     internal lateinit var gameStatusButton: Button
     internal lateinit var mainActivityInfoTextView: TextView
+
+    // database variables
+    private lateinit var database: PhoenixDatabase
     private lateinit var gameStatusViewModel: GameStatusViewModel
+    private lateinit var gameStatusDao: GameStatusDao
+
+    var infoText: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-// TODO remove all references to gameStatusButton when possible
+        // Setup Room Database
+        database = PhoenixBSECompanion.database!!
+        gameStatusDao = database.gameStatusDao()
+        val adapter = GameStatusListAdapter(this)
 
+
+        // Setup View references
+        mainActivityInfoTextView = findViewById<TextView>(R.id.mainActivityInfoTextView)
+// TODO remove all references to gameStatusButton when possible
         gameStatusButton = findViewById<Button>(R.id.gameStatusButton)
         gameStatusButton.setOnClickListener { view ->
             checkGameStatus()
         }
 
+// Display welcome text in the info Text View on the main screen
+        infoText = infoText +
+                getString(R.string.about_title, getString(R.string.app_name), getString(R.string.app_version_name)) + "\n" +
+                getString(R.string.about_message) + "\n\n"
+        mainActivityInfoTextView.text=infoText
 
-        checkGameStatus()
+// Open the Game Status Database and read the records
+        infoText = infoText +
+                getString(R.string.info_text_game_status_open)
+        mainActivityInfoTextView.text=infoText
+        gameStatusDao.getAllStatus()
+        infoText = infoText +
+                getString(R.string.info_text_game_status_loaded, adapter.getItemCount().toString())
+        mainActivityInfoTextView.text=infoText
 
-        val adapter = GameStatusListAdapter(this)
+// Display the latest Star Date
+        infoText = infoText +
+                getString(R.string.info_text_star_date, "???.??.?") +
+                getString(R.string.info_text_ready)
+        mainActivityInfoTextView.text=infoText
+
+
+// TODO Remove reference to the RecyclerView when possible. This is the remnants of the example this project has inspirations from
 
         gameStatusViewModel = ViewModelProviders.of(this).get(GameStatusViewModel::class.java)
-        gameStatusViewModel.allGameStatus.observe(this, Observer { gameStatus ->        val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
+        gameStatusViewModel.allGameStatus.observe(this, Observer {gameStatus ->
+            val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
             recyclerView.adapter = adapter
             recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -55,18 +92,7 @@ class MainActivity : AppCompatActivity() {
             gameStatus?.let { adapter.setGameStatusList(it)}
         })
 
-        mainActivityInfoTextView = findViewById<TextView>(R.id.mainActivityInfoTextView)
-        var tmpInfoText: String =
-                getString(R.string.about_title, getString(R.string.app_name), getString(R.string.app_version_name)) + "\n" +
-                        getString(R.string.about_message) + "\n\n" +
-                        getString(R.string.info_text_game_status_loaded, "?") +
-                        getString(R.string.info_text_star_date, "???.??.?") +
-                        getString(R.string.info_text_ready)
-        mainActivityInfoTextView.text=tmpInfoText
-
-
-
-    }
+  }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         super.onCreateOptionsMenu(menu)
@@ -102,9 +128,11 @@ class MainActivity : AppCompatActivity() {
             doAsync {
                 currentGameStatus = Request(xmlQueryUrlString.toString()).run()
                 gameStatusViewModel.insert(currentGameStatus)
+// TODO remove all references to gameStatusButton when possible
                 gameStatusButton.text = getString(R.string.game_status_current, currentGameStatus.star_date, currentGameStatus.status)
             }
         } else {
+// TODO remove all references to gameStatusButton when possible
             gameStatusButton.text = getString(R.string.online_status_offline)
         }
     }
