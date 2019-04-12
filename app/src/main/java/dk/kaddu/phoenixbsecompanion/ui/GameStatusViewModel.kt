@@ -3,6 +3,7 @@ package dk.kaddu.phoenixbsecompanion.ui
 import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import dk.kaddu.phoenixbsecompanion.data.GameStatus
 import dk.kaddu.phoenixbsecompanion.data.GameStatusRepository
 import dk.kaddu.phoenixbsecompanion.data.PhoenixDatabase

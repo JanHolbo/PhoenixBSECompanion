@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
@@ -22,11 +23,6 @@ import org.jetbrains.anko.doAsync
 
 class MainActivity : AppCompatActivity() {
 
-// TODO remove star_date and status when possible
-/*
-    private var star_date = "Not Available"
-    private var status = "Not Available"
-*/
 
     // view variables
 // TODO remove all references to gameStatusButton when possible
@@ -58,19 +54,29 @@ class MainActivity : AppCompatActivity() {
             checkGameStatus()
         }
 
+// TODO Remove reference to the RecyclerView when possible. This is the remnants of the example this project has inspirations from
+        gameStatusViewModel = ViewModelProviders.of(this).get(GameStatusViewModel::class.java)
+        gameStatusViewModel.allGameStatus.observe(this, Observer {gameStatus ->
+            infoText = infoText +
+            getString(R.string.info_text_current_game_status, gameStatus?.get(0)?.star_date, gameStatus?.get(0)?.status)
+            mainActivityInfoTextView.text=infoText
+
+            // Update the cached copy of the gameStatus in the adapter
+            gameStatus?.let { adapter.setGameStatusList(it)}
+        })
+
 // Display welcome text in the info Text View on the main screen
         infoText = infoText +
-                getString(R.string.about_title, getString(R.string.app_name), getString(R.string.app_version_name)) + "\n" +
-                getString(R.string.about_message) + "\n\n"
+                getString(R.string.about_title, getString(R.string.app_name), getString(R.string.app_version_name)) + "\n"
         mainActivityInfoTextView.text=infoText
 
 // Open the Game Status Database and read the records
         infoText = infoText +
                 getString(R.string.info_text_game_status_open)
         mainActivityInfoTextView.text=infoText
-        gameStatusDao.getAllStatus()
+
         infoText = infoText +
-                getString(R.string.info_text_game_status_loaded, adapter.getItemCount().toString())
+               getString(R.string.info_text_game_status_loaded, "?")
         mainActivityInfoTextView.text=infoText
 
 // Display the latest Star Date
@@ -79,20 +85,7 @@ class MainActivity : AppCompatActivity() {
                 getString(R.string.info_text_ready)
         mainActivityInfoTextView.text=infoText
 
-
-// TODO Remove reference to the RecyclerView when possible. This is the remnants of the example this project has inspirations from
-
-        gameStatusViewModel = ViewModelProviders.of(this).get(GameStatusViewModel::class.java)
-        gameStatusViewModel.allGameStatus.observe(this, Observer {gameStatus ->
-            val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
-            recyclerView.adapter = adapter
-            recyclerView.layoutManager = LinearLayoutManager(this)
-
-            // Update the cached copy of the gameStatus in the adapter
-            gameStatus?.let { adapter.setGameStatusList(it)}
-        })
-
-  }
+    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         super.onCreateOptionsMenu(menu)
@@ -114,19 +107,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkGameStatus() {
+
         var currentGameStatus = GameStatus(0, 0, 0, 0, 0, 0, 0, 0, "", "")
 
         if (isNetworkConnected()) {
-            val xmlQueryUrlString = StringBuilder()
-            xmlQueryUrlString.append("https://")                            // We want a secure connection to the server
-            xmlQueryUrlString.append("www.phoenixbse.co.uk")                // Domain name
-            xmlQueryUrlString.append("/?a=xml")                             // We are requesting an XML file
-            xmlQueryUrlString.append("&sa=").append("game_status")          // We are requesting the game_status response
-            xmlQueryUrlString.append("&uid=").append("1")                   // User ID
-            xmlQueryUrlString.append("&code=")
-            xmlQueryUrlString.append("22d9b2c0316adab0f9104571c7ed8eb0")    // "password" for the above user ID
             doAsync {
-                currentGameStatus = Request(xmlQueryUrlString.toString()).run()
+                Log.d(javaClass.simpleName, "Send Request")
+                currentGameStatus = Request("game_status").run()
+                Log.d(javaClass.simpleName, "currentGameStatus = "+currentGameStatus.toString())
                 gameStatusViewModel.insert(currentGameStatus)
 // TODO remove all references to gameStatusButton when possible
                 gameStatusButton.text = getString(R.string.game_status_current, currentGameStatus.star_date, currentGameStatus.status)

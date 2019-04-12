@@ -7,13 +7,22 @@ import org.xmlpull.v1.XmlPullParserFactory
 import java.io.IOException
 import java.net.URL
 
-class Request(private val url: String) {
+class Request(private val xmlRequest: String) {
 
     private var currentGameStatus = GameStatus (0, 0, 0, 0, 0, 0, 0, 0, "", "")
 
     fun run(): GameStatus {
+        Log.d(javaClass.simpleName, "Building xmlQueryUrlString")
+        val xmlQueryUrlString = StringBuilder()
+        xmlQueryUrlString.append("https://")                            // We want a secure connection to the server
+        xmlQueryUrlString.append("www.phoenixbse.co.uk")                // Domain name TODO change domain name to preference based value
+        xmlQueryUrlString.append("/?a=xml")                             // We are requesting an XML file
+        xmlQueryUrlString.append("&sa=").append(xmlRequest)             // The passed request
+        xmlQueryUrlString.append("&uid=").append("1")                   // User ID TODO change uid to preference based value
+        xmlQueryUrlString.append("&code=")
+        xmlQueryUrlString.append("22d9b2c0316adab0f9104571c7ed8eb0")    // "password" for the above user ID TODO change code to preference based value
 
-        var xmlStream = URL(url).openStream()
+        var xmlStream = URL(xmlQueryUrlString.toString()).openStream()
 
         try {
             Log.d(javaClass.simpleName, "Opening xmlStream")

@@ -14,6 +14,7 @@
     <string name="phoenix_background_graphics_content_description">Phoenix Background graphics</string>
     <string name="info_text_game_status_loaded">%s Game Status records loaded.\n</string>
     <string name="info_text_star_date">Star Date : %s\n</string>
-    <string name="info_text_ready">Ready.</string>
-    <string name="info_text_game_status_open">Opening Game Status database ...</string>
+    <string name="info_text_ready">Ready.\n\n</string>
+    <string name="info_text_game_status_open">Opening Game Status database .... </string>
+    <string name="info_text_current_game_status">Star Date: %s Game Status: %s\n</string>
 </resources>
