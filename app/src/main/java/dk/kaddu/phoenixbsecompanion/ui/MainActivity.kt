@@ -1,9 +1,12 @@
 package dk.kaddu.phoenixbsecompanion.ui
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
+import android.content.Intent
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
@@ -16,6 +19,7 @@ import android.view.MenuItem
 import android.widget.Button
 import android.widget.TextView
 import dk.kaddu.phoenixbsecompanion.BuildConfig
+import dk.kaddu.phoenixbsecompanion.GameStatusUpdateAlarm
 import dk.kaddu.phoenixbsecompanion.PhoenixBSECompanion
 import dk.kaddu.phoenixbsecompanion.R
 import dk.kaddu.phoenixbsecompanion.data.*
@@ -104,6 +108,20 @@ class MainActivity : AppCompatActivity() {
         val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager //1
         val networkInfo = connectivityManager.activeNetworkInfo //2
         return networkInfo != null && networkInfo.isConnected //3
+    }
+
+    private fun setCheckGameStatusAlarm() {
+        // get the AlarmManager
+        var am = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        // create a new Intent specifying the Broadcast receiver
+        var intent = Intent(this, GameStatusUpdateAlarm)
+
+        // create a PendingIntent using the newly created Intent
+        var pendIntent = PendingIntent.getBroadcast(this, 0, intent, 0) as PendingIntent
+
+        // setting the Alarm that will be fired
+        am.set ()
     }
 
     private fun checkGameStatus() {

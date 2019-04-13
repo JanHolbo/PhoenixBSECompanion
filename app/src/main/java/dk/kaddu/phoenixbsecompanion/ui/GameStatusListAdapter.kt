@@ -32,12 +32,12 @@ class GameStatusListAdapter internal constructor(
 
     override fun onBindViewHolder(holder: GameStatusViewHolder, position: Int) {
         val current = gameStatusList[position]
-        holder.gameStatusCurrentDayItemView.current_day_text_view.text = current.current_date.toString()
+/*        holder.gameStatusCurrentDayItemView.current_day_text_view.text = current.current_date.toString()
         holder.gameStatusTurnsDownloadedItemView.turns_downloaded_text_view.text = current.turns_downloaded.toString()
         holder.gameStatusTurnsProcessedItemView.turns_processed_text_view.text = current.turns_processed.toString()
         holder.gameStatusTurnsUploadedItemView.turns_uploaded_text_view.text = current.turns_uploaded.toString()
         holder.gameStatusDayFinishedItemView.turns_uploaded_text_view.text = current.day_finished.toString()
-
+*/
     }
 
     internal fun setGameStatusList(gameStatusList: List<GameStatus>) {
