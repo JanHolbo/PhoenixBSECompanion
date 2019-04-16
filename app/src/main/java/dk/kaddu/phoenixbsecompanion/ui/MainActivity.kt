@@ -115,13 +115,13 @@ class MainActivity : AppCompatActivity() {
         var am = getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         // create a new Intent specifying the Broadcast receiver
-        var intent = Intent(this, GameStatusUpdateAlarm)
+//        var intent = Intent(this, GameStatusUpdateAlarm)
 
         // create a PendingIntent using the newly created Intent
         var pendIntent = PendingIntent.getBroadcast(this, 0, intent, 0) as PendingIntent
 
         // setting the Alarm that will be fired
-        am.set ()
+//        am.set ()
     }
 
     private fun checkGameStatus() {
